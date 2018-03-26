@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'rest_framework',
 	'courselayout',
+	'courseManagement',
+	'coursecontent',
 ]
 
 MIDDLEWARE = [
@@ -79,9 +81,9 @@ WSGI_APPLICATION = 'myapp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myapp',
+        'NAME': 'myappnew',
         'USER': 'postgres',
-        'PASSWORD': 'Demo@123',
+        'PASSWORD': 'Admin@123',
         'HOST': 'localhost',
         'PORT': ''
     }

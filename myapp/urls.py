@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 	url(r'^api/auth/token', rest_framework_jwt.views.obtain_jwt_token),
 	url(r'^courselayoutapi/', include('courselayout.urls')),
+	url(r'^api/courseManagement/',include("courseManagement.urls", namespace="courseManagement-api")),
+	url(r'^coursecontent/',include("coursecontent.urls")),
 ]

@@ -23,4 +23,5 @@ urlpatterns = [
 	url(r'^singleactivity/$', views.singleactivity, name='singleactivity'),
 	url(r'^socialactivity/$', views.socialactivity, name='socialactivity'),
 	url(r'^topicweeklyactivity/$', views.topicweeklyactivity, name='topicweeklyactivity'),
+	url(r'^createsuperuser/$', views.createsuperuser, name='createsuperuser'),
 ]

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 	'courselayout',
 	'courseManagement',
 	'coursecontent',
+	'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [

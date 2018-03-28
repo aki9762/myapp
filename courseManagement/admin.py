@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from models import sample,parentCategory,filesUpload,yesNo,forceLanguage,hiddenSection,formattbl,course,courseLayout,badges,competencyFramework,taxonomies
+from models import userCourses,subCategory,parentCategory,filesUpload,yesNo,forceLanguage,hiddenSection,formattbl,course,courseLayout,badges,competencyFramework,taxonomies
 
 admin.site.register(parentCategory)
 admin.site.register(filesUpload)
@@ -17,4 +17,5 @@ admin.site.register(courseLayout)
 admin.site.register(badges)
 admin.site.register(competencyFramework)
 admin.site.register(taxonomies)
-admin.site.register(sample)
+admin.site.register(subCategory)
+admin.site.register(userCourses)

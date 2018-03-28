@@ -27,7 +27,7 @@ def getparentCategoryId():
 
 class parentCategory(models.Model):
   courseCategoryId=models.CharField(default=getparentCategoryId, max_length=200, unique=True)
-  parentCategoryId=models.TextField(null=True,blank=True)  
+  #parentCategoryId=models.TextField(null=True,blank=True)  
   categoryName=models.TextField(null=True,blank=True)
   description=models.TextField(null=True,blank=True)
   createdBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="parentCategoryCreatedBy", null= True)
@@ -400,8 +400,131 @@ def __unicode__(self):
 
 #----------------------- End taxonomies -------------------------#
 
+#----------------------- Start subCategory -------------------------#
 
-class sample(models.Model):
-  sampleName=models.TextField(null=True,blank=True)
+class subCategoryUUID(models.Model):
+        uuidNumber = models.BigIntegerField(default=0)
+
+
+# Function specifying custom id generation logic
+def getsubCategoryId():
+               try:
+                        uuid = subCategoryUUID.objects.latest('uuidNumber')
+               except Exception, e:
+                        uuid = subCategoryUUID()
+                        
+               uuid.uuidNumber = uuid.uuidNumber + 1
+               subCategoryId = 'subCategoryId-'+ str(uuid.uuidNumber)
+               uuid.save()
+               
+               return subCategoryId
+
+class subCategory(models.Model):
+	subCategoryId=models.CharField(default=getsubCategoryId, max_length=200, unique=True)
+	parentCategoryId=models.TextField(null=True,blank=True) 
+	subCategoryName=models.TextField(null=True,blank=True) 
+	description=models.TextField(null=True,blank=True) 
+	createdBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="formatCreatedBy", null= True)
+	modifiedBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="formatModifiedBy",null=True)
+	createdDate=models.DateTimeField(auto_now_add=True)
+	modifiedDate=models.DateTimeField(auto_now=True)
+	isActive=models.BooleanField(default=True)
 def __unicode__(self):
-    return self.sampleName 
+    return self.subCategoryName
+
+#----------------------- End subCategory -------------------------#
+
+
+#----------------------- Start userCourses -------------------------#
+
+class userCoursesUUID(models.Model):
+        uuidNumber = models.BigIntegerField(default=0)
+
+
+# Function specifying custom id generation logic
+def getuserCoursesId():
+               try:
+                        uuid = userCoursesUUID.objects.latest('uuidNumber')
+               except Exception, e:
+                        uuid = userCoursesUUID()
+                        
+               uuid.uuidNumber = uuid.uuidNumber + 1
+               userCoursesId = 'userCoursesId-'+ str(uuid.uuidNumber)
+               uuid.save()
+               
+               return userCoursesId
+
+class userCourses(models.Model):
+	userCourseId=models.CharField(default=getuserCoursesId, max_length=200, unique=True)
+	userId=models.TextField(null=True,blank=True) 
+	courseId=models.TextField(null=True,blank=True) 
+	completionFlag=models.TextField(null=True,blank=True) 
+	createdBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="formatCreatedBy", null= True)
+	modifiedBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="formatModifiedBy",null=True)
+	createdDate=models.DateTimeField(auto_now_add=True)
+	modifiedDate=models.DateTimeField(auto_now=True)
+	isActive=models.BooleanField(default=True)
+def __unicode__(self):
+    return self.userCourseId
+
+#----------------------- End userCourses -------------------------#
+
+
+#--------------decide the path of uploded file --------------------------#
+def get_upload_filepath(self, filename):
+  directory =settings.MEDIA_ROOT+"/"+"WebsiteDocuments"
+  if not os.path.exists(directory):
+    os.makedirs(directory)
+  full_path = str(directory)+"/%s" %(filename)
+  print "full_path --> ",full_path
+  return full_path
+#------------------------------------------------------------------------#
+#----------------------- start customFileUpload -------------------------#
+class customFileUpload(models.Model):
+	custom1=models.TextField(null=True,blank=True) 
+	custom2=models.TextField(null=True,blank=True) 
+	custom3=models.TextField(null=True,blank=True) 
+	custom4=models.TextField(null=True,blank=True) 
+	custom5=models.TextField(null=True,blank=True)
+	fileToUpload= models.FileField(upload_to=get_upload_filepath,null=True, blank=True,max_length=500)
+	createdDate=models.DateTimeField(auto_now_add=True)
+	modifiedDate=models.DateTimeField(auto_now=True)
+	isActive=models.BooleanField(default=True)
+#----------------------- End customFileUpload ---------------------------#
+
+
+
+#----------------------- Start userCourses -------------------------#
+
+class cohortUUID(models.Model):
+        uuidNumber = models.BigIntegerField(default=0)
+
+
+# Function specifying custom id generation logic
+def getcohortId():
+               try:
+                        uuid = cohortUUID.objects.latest('uuidNumber')
+               except Exception, e:
+                        uuid =cohortUUID()
+                        
+               uuid.uuidNumber = uuid.uuidNumber + 1
+               cohortId = 'cohortId-'+ str(uuid.uuidNumber)
+               uuid.save()
+               
+               return cohortId
+
+class cohort(models.Model):
+	cohortId=models.CharField(default=getcohortId, max_length=200, unique=True)
+	context=models.TextField(null=True,blank=True) 
+	cohortName=models.TextField(null=True,blank=True) 
+	visibility=models.TextField(null=True,blank=True) 
+	description=models.TextField(null=True,blank=True) 
+	createdBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="formatCreatedBy", null= True)
+	modifiedBy=models.TextField(null=True,blank=True) #models.ForeignKey(User, related_name="formatModifiedBy",null=True)
+	createdDate=models.DateTimeField(auto_now_add=True)
+	modifiedDate=models.DateTimeField(auto_now=True)
+	isActive=models.BooleanField(default=True)
+def __unicode__(self):
+    return self.cohortId
+
+#----------------------- End userCourses -------------------------#

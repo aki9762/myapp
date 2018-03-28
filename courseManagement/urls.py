@@ -14,7 +14,9 @@ from courseManagement.views import(
 	courseApi,
 	gettaxonomies,
 	badgesApi,
-	competencyFrameworkApi
+	competencyFrameworkApi,
+	subCategoryApi,
+	userCoursesApi
 	)
 
 urlpatterns=[
@@ -28,6 +30,9 @@ url(r'^getformattbl/$',getformattbl,name="getformattbl"),
 url(r'^courseApi/$',courseApi,name="courseApi"),
 url(r'^gettaxonomies/$',gettaxonomies,name="gettaxonomies"),
 url(r'^badgesApi/$',badgesApi,name="badgesApi"),
-url(r'^competencyFrameworkApi/$',competencyFrameworkApi,name="competencyFrameworkApi")
+url(r'^competencyFrameworkApi/$',competencyFrameworkApi,name="competencyFrameworkApi"),
+url(r'^subCategoryApi/$',subCategoryApi,name="subCategoryApi"),
+url(r'^userCoursesApi/$',userCoursesApi,name="userCoursesApi")
 ]
+  
   

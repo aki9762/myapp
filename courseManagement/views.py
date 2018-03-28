@@ -32,7 +32,7 @@ from rest_framework.permissions import IsAuthenticated,BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
 #importing the tables
-from courseManagement.models import competencyFramework,parentCategory,filesUpload,yesNo,forceLanguage,courseLayout,hiddenSection,formattbl,course,taxonomies,badges # Load here the models that we are going to use while writing api's
+from courseManagement.models import cohort,userCourses,subCategory,competencyFramework,parentCategory,filesUpload,yesNo,forceLanguage,courseLayout,hiddenSection,formattbl,course,taxonomies,badges # Load here the models that we are going to use while writing api's
 from rest_framework.settings import api_settings
 from rest_framework.generics import CreateAPIView,ListAPIView,RetrieveAPIView
 
@@ -68,7 +68,7 @@ def parentCategoryApi(request):
 		if(data["action"]=="create" or data["action"]=="edit"):
 			if(data['courseCategoryId'] == ""):
 				parentCategoryDetail = parentCategory()
-				parentCategoryDetail.parentCategoryId = data["parentCategoryId"]
+				#parentCategoryDetail.parentCategoryId = data["parentCategoryId"]
 				parentCategoryDetail.categoryName = data["categoryName"]
 				parentCategoryDetail.description = data["description"]
 				parentCategoryDetail.createdBy_id = data["createdBy"]
@@ -77,7 +77,7 @@ def parentCategoryApi(request):
 				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","courseCategoryId":parentCategoryDetail.courseCategoryId}),content_type="application/json")
 
 			else:
-				parentCategoryDetail = parentCategory.objects.get(parentCategoryId= data['parentCategoryId'])
+				parentCategoryDetail = parentCategory.objects.get(courseCategoryId= data['courseCategoryId'])
 				parentCategoryDetail.categoryName = data["categoryName"]
 				parentCategoryDetail.description = data["description"]
 				parentCategoryDetail.modifiedBy_id = data["modifiedBy"]
@@ -89,7 +89,7 @@ def parentCategoryApi(request):
 			parentCatObj = parentCategory.objects.filter(isActive=True)
 			parentCatList = []
 			for sg in parentCatObj:
-				obj = {"id":sg.id,"courseCategoryId":sg.courseCategoryId,"parentCategoryId":sg.parentCategoryId,"categoryName":sg.categoryName,"description":sg.description}
+				obj = {"id":sg.id,"courseCategoryId":sg.courseCategoryId,"categoryName":sg.categoryName,"description":sg.description}
 				parentCatList.append(obj)
 			return HttpResponse(json.dumps({"responsecode":"200","status":"success","parentCatList":parentCatList}),content_type="application/json")
 
@@ -111,7 +111,7 @@ def parentCategoryApi(request):
 				parCat_count = parentCategory.objects.filter(isActive=True).count()
 				if(parCat_count>0):
 					for sg in parentCategoryDetail:
-						fam={"id":sg.id,"courseCategoryId":sg.courseCategoryId,"parentCategoryId":sg.parentCategoryId,"categoryName":sg.categoryName,"description":sg.description}
+						fam={"id":sg.id,"courseCategoryId":sg.courseCategoryId,"categoryName":sg.categoryName,"description":sg.description}
 						parentCatList.append(fam)
 					return HttpResponse(json.dumps({"response code":"200","status": "Success","parentCategoryDetail":parentCatList,"parCat_count":parCat_count,"pageNo":pageNo}), content_type="application/json")
 				else:
@@ -121,13 +121,13 @@ def parentCategoryApi(request):
 				parCat_count = parentCategory.objects.filter(isActive=True).filter(categoryName__icontains=data["categoryName"]).count()
 				if(parCat_count>0):
 					for sg in parentCategoryDetail:
-						fam={"id":sg.id,"courseCategoryId":sg.courseCategoryId,"parentCategoryId":sg.parentCategoryId,"categoryName":sg.categoryName,"description":sg.description}
+						fam={"id":sg.id,"courseCategoryId":sg.courseCategoryId,"categoryName":sg.categoryName,"description":sg.description}
 						parentCatList.append(fam)
 					return HttpResponse(json.dumps({"response code":"200","status": "Success","parentCategoryDetail":parentCatList,"parCat_count":parCat_count,"pageNo":pageNo}), content_type="application/json")
 				else:
 					return HttpResponse(json.dumps({"response code":"300","status": "Success","parentCategoryDetail":parentCatList,"parCat_count":0,"pageNo":1}), content_type="application/json")           
 	except Exception as e:
-		return HttpResponse(json.dumps({ "status" : False, "responce code":"500","error":str(e) }), content_type="application/json")
+		return HttpResponse(json.dumps({ "status" : False, "responce_code":"500","error":str(e) }), content_type="application/json")
 
 
 #---------------------------------- End API's of parentCategoryApi ------------------------------------------------------#
@@ -139,7 +139,7 @@ def getfileUplaod(request):
         filesUploadList=[]
         filesUploadDetails=filesUpload.objects.filter(isActive=True)
         for fu in filesUploadDetails:
-            obj={"id":fu.id,"fileUploadId":fu.fileUploadId,"size":fu.size}
+            obj={"id":fu.id,"fileUploadId":fu.fileUploadId,"size":fu.size}   
             filesUploadList.append(obj)
         return HttpResponse(json.dumps({"response_code":200,"Status":"Success","filesUploadList":filesUploadList}),content_type="application/json")
     except Exception as e:
@@ -622,3 +622,248 @@ def competencyFrameworkApi(request):
 
 
 #---------------------------------- End API's of competencyFrameworkApi ------------------------------------------------------#
+
+#---------------------------------- Start API's of  subCategoryApi ----------------------------------------------------#
+
+@api_view(['POST'])
+#@permission_classes((IsAuthenticated, ))
+def subCategoryApi(request):
+	try:
+		data = request.data
+		if(data["action"]=="create" or data["action"]=="edit"):
+			if(data['subCategoryId'] == ""):
+				subCategoryDetail = subCategory()				
+				subCategoryDetail.parentCategoryId = data["parentCategoryId"]
+				subCategoryDetail.subCategoryName = data["subCategoryName"]
+				subCategoryDetail.description = data["description"]
+				subCategoryDetail.createdBy_id = data["createdBy"]
+				subCategoryDetail.save()
+
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","subCategoryId":subCategoryDetail.subCategoryId}),content_type="application/json")
+
+			else:
+				subCategoryDetail = subCategory.objects.get(subCategoryId= data['subCategoryId'])
+				subCategoryDetail.parentCategoryId = data["parentCategoryId"]
+				subCategoryDetail.subCategoryName = data["subCategoryName"]
+				subCategoryDetail.description = data["description"]
+				subCategoryDetail.modifiedBy_id = data["modifiedBy"]
+				subCategoryDetail.save()
+
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","subCategoryId":subCategoryDetail.subCategoryId}),content_type="application/json")
+		
+		if(data["action"] == "allList"):
+			subCatObj = subCategory.objects.filter(isActive=True)
+			subCatList = []
+			for sg in subCatObj:
+				obj = {"id":sg.id,"subCategoryId":sg.subCategoryId,"parentCategoryId":sg.parentCategoryId,"subCategoryName":sg.subCategoryName,"description":sg.description}
+				subCatList.append(obj)
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success","subCatList":subCatList}),content_type="application/json")
+
+		if(data["action"] == "delete"):
+			subCategoryDetail = subCategory.objects.get(subCategoryId=data['subCategoryId'])
+			subCategoryDetail.isActive=False
+			subCategoryDetail.save()
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success"}),content_type="application/json")
+
+		elif(data["action"]=="list" or data["action"]=="search"):
+			pageNo = data['pageNo']
+			subCatList=[]
+			entriesPerPage = data['entriesPerPage']
+			subCategoryName =data['subCategoryName']
+			excludePageEntries = (pageNo - 1) * entriesPerPage
+			nextPageEntries = excludePageEntries + entriesPerPage
+			if(subCategoryName == ""):
+				subCategoryDetail = subCategory.objects.filter(isActive=True).order_by('-id')[excludePageEntries:nextPageEntries]
+				subCat_count = subCategory.objects.filter(isActive=True).count()
+				if(subCat_count>0):
+					for sg in subCategoryDetail:
+						fam={"id":sg.id,"subCategoryId":sg.subCategoryId,"parentCategoryId":sg.parentCategoryId,"subCategoryName":subCategoryName,"description":sg.description}
+						subCatList.append(fam)
+					return HttpResponse(json.dumps({"response code":"200","status": "Success","subCategoryDetail":subCatList,"subCat_count":subCat_count,"pageNo":pageNo}), content_type="application/json")
+				else:
+					return HttpResponse(json.dumps({"response code":"300","status": "Success","subCategoryDetail":subCatList,"subCat_count":0,"pageNo":1}), content_type="application/json")
+			elif(subCategoryName!=""):
+				subCategoryDetail = subCategory.objects.filter(isActive=True).filter(subCategoryName__icontains=data["subCategoryName"]).order_by('-id')[excludePageEntries:nextPageEntries]
+				subCat_count = subCategory.objects.filter(isActive=True).filter(subCategoryName__icontains=data["subCategoryName"]).count()
+				if(subCat_count>0):
+					for sg in subCategoryDetail:
+						fam={"id":sg.id,"subCategoryId":sg.subCategoryId,"parentCategoryId":sg.parentCategoryId,"subCategoryName":subCategoryName,"description":sg.description}
+						subCatList.append(fam)
+					return HttpResponse(json.dumps({"response code":"200","status": "Success","subCategoryDetail":subCatList,"subCat_count":subCat_count,"pageNo":pageNo}), content_type="application/json")
+				else:
+					return HttpResponse(json.dumps({"response code":"300","status": "Success","subCategoryDetail":subCatList,"subCat_count":0,"pageNo":1}), content_type="application/json")           
+	except Exception as e:
+		return HttpResponse(json.dumps({ "status" : False, "responce_code":"500","error":str(e) }), content_type="application/json")
+
+
+#---------------------------------- End API's of subCategoryApi ---.---------------------------------------------------#
+
+
+#---------------------------------- Start API's of  userCoursesApi ----------------------------------------------------#
+
+@api_view(['POST'])
+#@permission_classes((IsAuthenticated, ))
+def userCoursesApi(request):
+	try:
+		data = request.data
+		if(data["action"]=="create" or data["action"]=="edit"):
+			if(data['userCourseId'] == ""):
+				userCoursesDetail = userCourses()				
+				userCoursesDetail.userId = data["userId"]
+				userCoursesDetail.courseId = data["courseId"]
+				userCoursesDetail.completionFlag = data["completionFlag"]
+				userCoursesDetail.createdBy_id = data["createdBy"]
+				userCoursesDetail.save()
+
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","userCourseId":userCoursesDetail.userCourseId}),content_type="application/json")
+
+
+			else:
+				userCoursesDetail = userCourses.objects.get(userCourseId= data['userCourseId'])
+				userCoursesDetail.userId = data["userId"]
+				userCoursesDetail.courseId = data["courseId"]
+				userCoursesDetail.completionFlag = data["completionFlag"]
+				userCoursesDetail.modifiedBy_id = data["modifiedBy"]
+				userCoursesDetail.save()
+
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","userCourseId":userCoursesDetail.userCourseId}),content_type="application/json")
+		
+		if(data["action"] == "allList"):
+			userCoursesObj = userCourses.objects.filter(isActive=True)
+			userCoursesList = []
+			for sg in userCoursesObj:
+				obj = {"id":sg.id,"userCourseId":sg.userCourseId,"userId":sg.userId,"courseId":sg.courseId,"completionFlag":sg.completionFlag}
+				userCoursesList.append(obj)
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success","userCoursesList":userCoursesList}),content_type="application/json")
+
+		if(data["action"] == "delete"):
+			userCoursesDetail = userCourses.objects.get(userCourseId=data['userCourseId'])
+			userCoursesDetail.isActive=False
+			userCoursesDetail.save()
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success"}),content_type="application/json")
+		if(data["action"] == "update"):
+			userCoursesDetail = userCourses.objects.get(userCourseId=data['userCourseId'])
+			if(data['check']=="1"):
+				userCoursesDetail.completionFlag="1"
+			else:
+				userCoursesDetail.completionFlag="0"
+			userCoursesDetail.save()
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success","userCourseId":userCoursesDetail.userCourseId}),content_type="application/json")
+	except Exception as e:
+		return HttpResponse(json.dumps({ "status" : False, "responce_code":"500","error":str(e) }), content_type="application/json")
+
+
+#---------------------------------- End API's of userCoursesApi ---.---------------------------------------------------#
+
+#---------------------------------- Start API's of customFileUploadAPI ---.---------------------------------------------------#
+
+@api_view(['POST'])
+#@permission_classes((IsAuthenticated, ))
+def customFileUploadAPI(request):
+	try:
+		data = request.data
+		if(data["action"]=="create" or data["action"]=="edit"):
+			if(data['id'] == ""):
+				customFileUploadDetail = customFileUpload()	
+				customFileUploadDetail.custom1=data['custom1']
+				customFileUploadDetail.custom2=data['custom2']
+				customFileUploadDetail.custom3=data['custom3']
+				customFileUploadDetail.custom4=data['custom4']
+				customFileUploadDetail.custom5=data['custom5']
+				customFileUploadDetail.fileToUpload=data['fileToUpload']	
+				customFileUploadDetail.createdBy_id = data["createdBy"]
+				customFileUploadDetail.save()
+
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","customFileUploadId":customFileUpload.id}),content_type="application/json")
+			else:
+				customFileUploadDetail = customFileUpload.objects.get(id= data['id'])
+				customFileUploadDetail.custom1=data['custom1']
+				customFileUploadDetail.custom2=data['custom2']
+				customFileUploadDetail.custom3=data['custom3']
+				customFileUploadDetail.custom4=data['custom4']
+				customFileUploadDetail.custom5=data['custom5']
+				#customFileUploadDetail.fileToUpload=data['fileToUpload']
+				if(data["fileToUpload"]==None or data["fileToUpload"]=="" or data["fileToUpload"]=="Null"):
+					pass
+				else:
+					customFileUploadDetail.fileToUpload=data["fileToUpload"]		
+				customFileUploadDetail.modifiedBy_id = data["modifiedBy"]
+				customFileUploadDetail.save()
+
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","customFileUploadId":customFileUpload.id}),content_type="application/json")
+		
+	except Exception as e:
+		return HttpResponse(json.dumps({ "status" : False, "responce_code":"500","error":str(e) }), content_type="application/json")
+#---------------------------------- End API's of customFileUploadAPI ---.---------------------------------------------------#
+
+#---------------------------------- Start API's of  cohortApi ----------------------------------------------------#
+
+@api_view(['POST'])
+#@permission_classes((IsAuthenticated, ))
+def cohortApi(request):
+	try:
+		data = request.data
+		if(data["action"]=="create" or data["action"]=="edit"):
+			if(data['cohortId'] == ""):
+				cohortDetail.cohortDetail = cohort()		
+				cohortDetail.context= data["context"]
+				cohortDetail.cohortName= data["cohortName"]
+				cohortDetail.visibility= data["visibility"]
+				cohortDetail.description= data["description"]		
+				cohortDetail.createdBy_id = data["createdBy"]
+				cohortDetail.save()
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","cohortId":cohortDetail.cohortId}),content_type="application/json")
+			else:
+				cohortDetail = cohort.objects.get(cohortId= data['cohortId'])
+				cohortDetail.context= data["context"]
+				cohortDetail.cohortName= data["cohortName"]
+				cohortDetail.visibility= data["visibility"]
+				cohortDetail.description= data["description"]		
+				cohortDetail.modifiedBy_id = data["modifiedBy"]
+				cohortDetail.save()
+				return HttpResponse(json.dumps({"responsecode":"200","status":"Success","cohortId":cohortDetail.cohortId}),content_type="application/json")
+		if(data["action"] == "allList"):
+			cohortObj = cohort.objects.filter(isActive=True)
+			cohortList = []
+			for sg in cohortObj:
+				obj = {"id":sg.id,"cohortId":sg.cohortId,"context":sg.context,"cohortName":sg.cohortName,"visibility":sg.visibility,"description":sg.description}
+				cohortList.append(obj)
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success","cohortList":cohortList}),content_type="application/json")
+
+		if(data["action"] == "delete"):
+			cohortDetail = cohort.objects.get(cohortId=data['cohortId'])
+			cohortDetail.isActive=False
+			cohortDetail.save()
+			return HttpResponse(json.dumps({"responsecode":"200","status":"success"}),content_type="application/json")
+		elif(data["action"]=="list" or data["action"]=="search"):
+			pageNo = data['pageNo']
+			cohortList=[]
+			entriesPerPage = data['entriesPerPage']
+			cohortName =data['cohortName']
+			excludePageEntries = (pageNo - 1) * entriesPerPage
+			nextPageEntries = excludePageEntries + entriesPerPage
+			if(cohortName == ""):
+				cohortDetail = cohort.objects.filter(isActive=True).order_by('-id')[excludePageEntries:nextPageEntries]
+				cohort_count = cohort.objects.filter(isActive=True).count()
+				if(cohort_count>0):
+					for sg in cohortDetail:
+						fam={"id":sg.id,"cohortId":sg.cohortId,"context":sg.context,"cohortName":sg.cohortName,"visibility":sg.visibility,"description":sg.description}
+						cohortList.append(fam)
+					return HttpResponse(json.dumps({"response code":"200","status": "Success","cohortDetail":cohortList,"cohort_count":cohort_count,"pageNo":pageNo}), content_type="application/json")
+				else:
+					return HttpResponse(json.dumps({"response code":"300","status": "Success","cohortDetail":cohortList,"cohort_count":0,"pageNo":1}), content_type="application/json")
+			elif(cohortName!=""):
+				cohortDetail = cohort.objects.filter(isActive=True).filter(cohortName__icontains=data["cohortName"]).order_by('-id')[excludePageEntries:nextPageEntries]
+				cohort_count = cohort.objects.filter(isActive=True).filter(cohortName__icontains=data["cohortName"]).count()
+				if(cohort_count>0):
+					for sg in cohortDetail:
+						fam={"id":sg.id,"cohortId":sg.cohortId,"context":sg.context,"cohortName":sg.cohortName,"visibility":sg.visibility,"description":sg.description}
+						cohortList.append(fam)
+					return HttpResponse(json.dumps({"response code":"200","status": "Success","cohortDetail":cohortList,"cohort_count":cohort_count,"pageNo":pageNo}), content_type="application/json")
+				else:
+					return HttpResponse(json.dumps({"response code":"300","status": "Success","cohortDetail":cohortList,"cohort_count":0,"pageNo":1}), content_type="application/json")
+	except Exception as e:
+		return HttpResponse(json.dumps({ "status" : False, "responce_code":"500","error":str(e) }), content_type="application/json")
+
+
+#---------------------------------- End API's of userCoursesApi ---.---------------------------------------------------#

@@ -43,7 +43,12 @@ INSTALLED_APPS = [
 	'courseManagement',
 	'coursecontent',
 	'rest_framework_swagger',
+	'rest_framework_docs',
 ]
+
+REST_FRAMEWORK_DOCS = {
+    'HIDE_DOCS': False  # Default: False
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

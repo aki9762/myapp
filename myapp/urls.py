@@ -29,4 +29,5 @@ urlpatterns = [
 	url(r'^api/courseManagement/',include("courseManagement.urls", namespace="courseManagement-api")),
 	url(r'^coursecontent/',include("coursecontent.urls")),
 	url(r'^$', schema_view),
+	url(r'^docs/', include('rest_framework_docs.urls')),
 ]

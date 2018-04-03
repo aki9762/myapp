@@ -16,6 +16,8 @@ from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User
 from coursecontent.models import pagecontent
 
+from pyPdf import PdfFileReader
+from PythonMagick import Image
 # Create your views here.
 
 @api_view(['POST'])
@@ -86,3 +88,12 @@ def createpagecontent(request):
 
 	except Exception as e:
 		return HttpResponse(json.dumps({ "status" : False, "responce code":"500","error":str(e) }), content_type="application/json")
+		
+@api_view(['GET'])				
+def getimages(request):	
+	myfile = PdfFileReader('files.pdf')
+	pages = myfile.getNumPages()
+	for page in pages:
+		im = Image(myfile.getPage(i+1))
+		im.write('file_image{}.png'.format(i+1))
+	return HttpResponse(json.dumps({"responce code":"100","status": "success" ,"user" : im}), content_type="application/json")

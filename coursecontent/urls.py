@@ -19,4 +19,5 @@ from . import views
 
 urlpatterns = [
 	url(r'^pagecontent/$', views.createpagecontent, name='createpagecontent'),
+	url(r'^getimages/$', views.getimages, name='getimages'),
 ]

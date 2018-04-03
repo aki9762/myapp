@@ -30,4 +30,5 @@ urlpatterns = [
 	url(r'^coursecontent/',include("coursecontent.urls")),
 	url(r'^$', schema_view),
 	url(r'^docs/', include('rest_framework_docs.urls')),
+	url(r'^api/impexp/',include("impexp.urls", namespace="impexp-api"))
 ]

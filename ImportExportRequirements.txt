@@ -1,0 +1,14 @@
+pyexcel>=0.5.7
+pyexcel-webio>=0.1.2
+Django>=1.6.1
+nose
+mock;python_version<"3"
+codecov
+coverage
+flake8
+lxml
+pyexcel-ods3>=0.1.0
+pyexcel-xls>=0.1.0
+pyexcel-xlsx>=0.1.0
+pyexcel-handsontable
+pyexcel-pygal
